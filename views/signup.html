@@ -1,0 +1,58 @@
+<h1><i class="fas fa-user-plus"></i> Sign Up</h1>
+<br>
+<form id="signupForm" action="/signup" method="POST">
+    <div class="form-group">
+        <label for="username"><i class="fas fa-user"></i> Username:</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="off" required>
+    </div>
+    <div class="form-group">
+        <label for="email"><i class="fas fa-solid fa-envelope"></i> Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" autocomplete="off" required>
+    </div>
+    <div class="form-group">
+        <label for="password"><i class="fas fa-lock"></i> Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="new-password" required>
+    </div>
+    <button type="submit"> Sign Up</button>
+</form>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#signupForm').submit(function (event) {
+            event.preventDefault(); // Prevent form submission
+            var username = $('#username').val();
+            var password = $('#password').val();
+            var email = $('#email').val();
+
+            // Make Ajax request
+            $.ajax({
+                type: 'POST',
+                url: '/signup',
+                data: {
+                    username: username,
+                    email: email,
+                    password: password,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Signup successful
+                        var successAlert = '<div class="alert alert-success">' + response.message + '</div>';
+                        $('#messageContainer').html(successAlert);
+                        $('#signupForm')[0].reset(); // Clear form fields
+                    } else {
+                        // Signup failed
+                        var errorAlert = '<div class="alert alert-danger">' + response.message + '</div>';
+                        $('#messageContainer').html(errorAlert);
+                    }
+                },
+                error: function (error) {
+                    console.error('An error occurred during the Ajax request:', error);
+                    var errorAlert = '<div class="alert alert-danger">An error occurred during signup</div>';
+                    $('#messageContainer').html(errorAlert);
+                }
+            });
+        });
+    });
+</script>
